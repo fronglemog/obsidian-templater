@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.16.4](https://github.com/SilentVoid13/Templater/compare/2.16.3...2.16.4) (2025-12-17)
+
+
+### Bug Fixes
+
+* Fixed template name when templates folder is not configured ([#1665](https://github.com/SilentVoid13/Templater/issues/1665)) ([0ad40da](https://github.com/SilentVoid13/Templater/commit/0ad40daf711e2ac4944a4c60bc7fdfb6fac10c76))
+* prompt confirmation on some mobile keyboards, ([#1654](https://github.com/SilentVoid13/Templater/issues/1654)) ([f1f65c6](https://github.com/SilentVoid13/Templater/commit/f1f65c638df412f044765d6c5340e62b6f1f2aaa))
+
+### [2.16.3](https://github.com/SilentVoid13/Templater/compare/2.16.2...2.16.3) (2025-12-17)
+
+
+### Bug Fixes
+
+* `tp.file.cursor()` causing screen jumping on newer versions of Obsidian ([1e5e501](https://github.com/SilentVoid13/Templater/commit/1e5e5017c67fb00850970cf600bfbc162ce581dc)), closes [#1667](https://github.com/SilentVoid13/Templater/issues/1667)
+
 ### [2.16.2](https://github.com/SilentVoid13/Templater/compare/2.16.1...2.16.2) (2025-10-17)
 
 
