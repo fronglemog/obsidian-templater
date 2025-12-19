@@ -101,23 +101,6 @@ export class CommandHandler {
                     );
                 },
             });
-            this.plugin.addCommand({
-                id: `create-${new_template}`,
-                name: `Create ${new_template_name}`,
-                icon: "templater-icon",
-                callback: () => {
-                    const template = errorWrapperSync(
-                        () => resolve_tfile(this.plugin.app, new_template),
-                        `Couldn't find the template file associated with this hotkey`
-                    );
-                    if (!template) {
-                        return;
-                    }
-                    this.plugin.templater.create_new_note_from_template(
-                        template
-                    );
-                },
-            });
         }
     }
 
