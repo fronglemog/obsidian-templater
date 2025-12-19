@@ -56,23 +56,6 @@ export class CommandHandler {
             },
         });
 
-        this.plugin.addCommand({
-            id: "create-new-note-from-template",
-            name: "Create new note from template",
-            icon: "templater-icon",
-            hotkeys: Platform.isMacOS
-                ? undefined
-                : [
-                      {
-                          modifiers: ["Alt"],
-                          key: "n",
-                      },
-                  ],
-            callback: () => {
-                this.plugin.fuzzy_suggester.create_new_note_from_template();
-            },
-        });
-
         this.register_templates_hotkeys();
     }
 

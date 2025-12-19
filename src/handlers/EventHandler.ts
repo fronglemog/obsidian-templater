@@ -3,11 +3,7 @@ import { Templater } from "core/Templater";
 import { Settings } from "settings/Settings";
 import {
     EventRef,
-    Menu,
-    MenuItem,
     TAbstractFile,
-    TFile,
-    TFolder,
 } from "obsidian";
 
 export default class EventHandler {
@@ -36,7 +32,6 @@ export default class EventHandler {
             });
         }
         this.update_syntax_highlighting();
-        this.update_file_menu();
     }
 
     update_syntax_highlighting(): void {
@@ -72,26 +67,5 @@ export default class EventHandler {
                 this.trigger_on_file_creation_event = undefined;
             }
         }
-    }
-
-    update_file_menu(): void {
-        this.plugin.registerEvent(
-            this.plugin.app.workspace.on(
-                "file-menu",
-                (menu: Menu, file: TFile) => {
-                    if (file instanceof TFolder) {
-                        menu.addItem((item: MenuItem) => {
-                            item.setTitle("Create new note from template")
-                                .setIcon("templater-icon")
-                                .onClick(() => {
-                                    this.plugin.fuzzy_suggester.create_new_note_from_template(
-                                        file
-                                    );
-                                });
-                        });
-                    }
-                }
-            )
-        );
     }
 }
