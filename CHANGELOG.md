@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.18.1](https://github.com/SilentVoid13/Templater/compare/2.18.0...2.18.1) (2026-01-29)
+
+## [2.18.0](https://github.com/SilentVoid13/Templater/compare/2.17.1...2.18.0) (2026-01-28)
+
+
+### Features
+
+* support merging frontmatter with `tp.file.include` ([#1643](https://github.com/SilentVoid13/Templater/issues/1643)) ([db9a91e](https://github.com/SilentVoid13/Templater/commit/db9a91e6d663308d21a318b186fb6c72bed3e799))
+
+### [2.17.1](https://github.com/SilentVoid13/Templater/compare/2.17.0...2.17.1) (2026-01-27)
+
+
+### Bug Fixes
+
+* Templater Commands not running on automatic Daily Note Creation on Obsidian 1.11.0+ ([e6fcf88](https://github.com/SilentVoid13/Templater/commit/e6fcf889d6ec54d04075ed4ec2c47d0ce7be3d86)), closes [#1689](https://github.com/SilentVoid13/Templater/issues/1689)
+
+## [2.17.0](https://github.com/SilentVoid13/Templater/compare/2.16.4...2.17.0) (2026-01-20)
+
+
+### Features
+
+* Add icon to settings tab (Obsidian 1.11.0+) ([d449e0b](https://github.com/SilentVoid13/Templater/commit/d449e0b6627fa7592b3be168a64c549e4228e197))
+
+
+### Bug Fixes
+
+* Prompts always being multi-line, regardless of `multi_line` prop ([4a21578](https://github.com/SilentVoid13/Templater/commit/4a21578ed67c83168b32e167c661049d1119ead9)), closes [#1673](https://github.com/SilentVoid13/Templater/issues/1673)
+
 ### [2.16.4](https://github.com/SilentVoid13/Templater/compare/2.16.3...2.16.4) (2025-12-17)
 
 
