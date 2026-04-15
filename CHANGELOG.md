@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.19.0](https://github.com/SilentVoid13/Templater/compare/2.18.1...2.19.0) (2026-04-11)
+
+
+### Features
+
+* add CLI handler for template-based note creation ([#1703](https://github.com/SilentVoid13/Templater/issues/1703)) ([6740eab](https://github.com/SilentVoid13/Templater/commit/6740eabacb9888caa6d705c5f2b3c245e09de69a)), closes [#1702](https://github.com/SilentVoid13/Templater/issues/1702)
+
+
+### Bug Fixes
+
+* Handle unset templates directory ([#1701](https://github.com/SilentVoid13/Templater/issues/1701)) ([78203a2](https://github.com/SilentVoid13/Templater/commit/78203a2e7a9c6af297993348b7d816cff14fd9ef)), closes [#1686](https://github.com/SilentVoid13/Templater/issues/1686)
+* typo 'simple' -> 'single' in syntax.md ([#1709](https://github.com/SilentVoid13/Templater/issues/1709)) ([ab35eca](https://github.com/SilentVoid13/Templater/commit/ab35eca365871ef1638b721f4cdffa6112aad27a)), closes [#1704](https://github.com/SilentVoid13/Templater/issues/1704)
+
+### [2.18.1](https://github.com/SilentVoid13/Templater/compare/2.18.0...2.18.1) (2026-01-29)
+
+## [2.18.0](https://github.com/SilentVoid13/Templater/compare/2.17.1...2.18.0) (2026-01-28)
+
+
+### Features
+
+* support merging frontmatter with `tp.file.include` ([#1643](https://github.com/SilentVoid13/Templater/issues/1643)) ([db9a91e](https://github.com/SilentVoid13/Templater/commit/db9a91e6d663308d21a318b186fb6c72bed3e799))
+
+### [2.17.1](https://github.com/SilentVoid13/Templater/compare/2.17.0...2.17.1) (2026-01-27)
+
+
+### Bug Fixes
+
+* Templater Commands not running on automatic Daily Note Creation on Obsidian 1.11.0+ ([e6fcf88](https://github.com/SilentVoid13/Templater/commit/e6fcf889d6ec54d04075ed4ec2c47d0ce7be3d86)), closes [#1689](https://github.com/SilentVoid13/Templater/issues/1689)
+
+## [2.17.0](https://github.com/SilentVoid13/Templater/compare/2.16.4...2.17.0) (2026-01-20)
+
+
+### Features
+
+* Add icon to settings tab (Obsidian 1.11.0+) ([d449e0b](https://github.com/SilentVoid13/Templater/commit/d449e0b6627fa7592b3be168a64c549e4228e197))
+
+
+### Bug Fixes
+
+* Prompts always being multi-line, regardless of `multi_line` prop ([4a21578](https://github.com/SilentVoid13/Templater/commit/4a21578ed67c83168b32e167c661049d1119ead9)), closes [#1673](https://github.com/SilentVoid13/Templater/issues/1673)
+
 ### [2.16.4](https://github.com/SilentVoid13/Templater/compare/2.16.3...2.16.4) (2025-12-17)
 
 
