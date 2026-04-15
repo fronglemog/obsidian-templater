@@ -1,5 +1,6 @@
 packages:
-    - "."
+  - "."
 
 onlyBuiltDependencies:
-    - "@codemirror/language"
+  - "@codemirror/language"
+  - esbuild
