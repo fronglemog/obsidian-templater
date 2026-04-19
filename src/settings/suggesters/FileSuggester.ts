@@ -1,7 +1,4 @@
-// Credits go to Liam's Periodic Notes Plugin: https://github.com/liamcain/obsidian-periodic-notes
-
-import { TAbstractFile, TFile } from "obsidian";
-import { TextInputSuggest } from "./suggest";
+import { AbstractInputSuggest, TAbstractFile, TFile } from "obsidian";
 import { get_tfiles_from_folder } from "utils/Utils";
 import TemplaterPlugin from "main";
 import { errorWrapperSync } from "utils/Error";
@@ -11,11 +8,11 @@ export enum FileSuggestMode {
     ScriptFiles,
 }
 
-export class FileSuggest extends TextInputSuggest<TFile> {
+export class FileSuggest extends AbstractInputSuggest<TFile> {
     constructor(
         public inputEl: HTMLInputElement,
         private plugin: TemplaterPlugin,
-        private mode: FileSuggestMode
+        private mode: FileSuggestMode,
     ) {
         super(plugin.app, inputEl);
     }
@@ -38,27 +35,27 @@ export class FileSuggest extends TextInputSuggest<TFile> {
         }
     }
 
-    getSuggestions(input_str: string): TFile[] {
+    getSuggestions(inputStr: string): TFile[] {
         const all_files = errorWrapperSync(
             () =>
                 get_tfiles_from_folder(
                     this.plugin.app,
-                    this.get_folder(this.mode)
+                    this.get_folder(this.mode),
                 ),
-            this.get_error_msg(this.mode)
+            this.get_error_msg(this.mode),
         );
         if (!all_files) {
             return [];
         }
 
         const files: TFile[] = [];
-        const lower_input_str = input_str.toLowerCase();
+        const lowerCaseInputStr = inputStr.toLowerCase();
 
         all_files.forEach((file: TAbstractFile) => {
             if (
                 file instanceof TFile &&
                 file.extension === "md" &&
-                file.path.toLowerCase().contains(lower_input_str)
+                file.path.toLowerCase().includes(lowerCaseInputStr)
             ) {
                 files.push(file);
             }
@@ -72,7 +69,7 @@ export class FileSuggest extends TextInputSuggest<TFile> {
     }
 
     selectSuggestion(file: TFile): void {
-        this.inputEl.value = file.path;
+        this.setValue(file.path);
         this.inputEl.trigger("input");
         this.close();
     }

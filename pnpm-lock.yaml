@@ -20,9 +20,6 @@ importers:
       '@microsoft/tsdoc':
         specifier: ^0.15.1
         version: 0.15.1
-      '@popperjs/core':
-        specifier: ^2.11.6
-        version: 2.11.8
       '@silentvoid13/rusty_engine':
         specifier: ^0.4.0
         version: 0.4.0
@@ -198,9 +195,6 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
-
-  '@popperjs/core@2.11.8':
-    resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
   '@silentvoid13/rusty_engine@0.4.0':
     resolution: {integrity: sha512-R0IqWLUIiJlP2eKsTebJrFbqifFQ+mUUDiBJSmW7y9maQxsX5GvFIQ9ekjFlLfS+QVUnPiomCmRRNhyr9+dJPA==}
@@ -1888,8 +1882,6 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.16.0
-
-  '@popperjs/core@2.11.8': {}
 
   '@silentvoid13/rusty_engine@0.4.0': {}
 
