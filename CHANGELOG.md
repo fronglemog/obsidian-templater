@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.19.3](https://github.com/SilentVoid13/Templater/compare/2.19.2...2.19.3) (2026-04-22)
+
+
+### Bug Fixes
+
+* correct formatting and improve readability of intellisense suggestions ([83f795f](https://github.com/SilentVoid13/Templater/commit/83f795f6ab3ad533882771bf193b4d65f2a01333)), closes [#1658](https://github.com/SilentVoid13/Templater/issues/1658)
+
 ### [2.19.2](https://github.com/SilentVoid13/Templater/compare/2.19.1...2.19.2) (2026-04-21)
 
 
