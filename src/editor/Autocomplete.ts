@@ -20,8 +20,8 @@ import {
     IntellisenseRenderOption,
     shouldRenderDescription,
     shouldRenderParameters,
-    shouldRenderReturns
-} from "../settings/RenderSettings/IntellisenseRenderOption"
+    shouldRenderReturns,
+} from "../settings/RenderSettings/IntellisenseRenderOption";
 
 import TemplaterPlugin from "main";
 import { append_bolded_label_with_value_to_parent } from "utils/Utils";
@@ -36,22 +36,22 @@ export class Autocomplete extends EditorSuggest<TpSuggestDocumentation> {
     private module_name: ModuleName | string;
     private function_trigger: boolean;
     private function_name: string;
-    private intellisense_render_setting: IntellisenseRenderOption
+    private intellisense_render_setting: IntellisenseRenderOption;
 
     constructor(plugin: TemplaterPlugin) {
         super(plugin.app);
         this.documentation = new Documentation(plugin);
-        this.intellisense_render_setting = plugin.settings.intellisense_render
+        this.intellisense_render_setting = plugin.settings.intellisense_render;
     }
 
     onTrigger(
         cursor: EditorPosition,
         editor: Editor,
-        _file: TFile
+        _file: TFile,
     ): EditorSuggestTriggerInfo | null {
         const range = editor.getRange(
             { line: cursor.line, ch: 0 },
-            { line: cursor.line, ch: cursor.ch }
+            { line: cursor.line, ch: cursor.ch },
         );
         const match = this.tp_keyword_regex.exec(range);
         if (!match) {
@@ -83,13 +83,16 @@ export class Autocomplete extends EditorSuggest<TpSuggestDocumentation> {
         return trigger_info;
     }
 
-    async getSuggestions(context: EditorSuggestContext): Promise<TpSuggestDocumentation[]> {
+    async getSuggestions(
+        context: EditorSuggestContext,
+    ): Promise<TpSuggestDocumentation[]> {
         let suggestions: Array<TpSuggestDocumentation>;
         if (this.module_name && this.function_trigger) {
-            suggestions = await this.documentation.get_all_functions_documentation(
-                this.module_name as ModuleName,
-                this.function_name
-            ) as TpFunctionDocumentation[];
+            suggestions =
+                (await this.documentation.get_all_functions_documentation(
+                    this.module_name as ModuleName,
+                    this.function_name,
+                )) as TpFunctionDocumentation[];
         } else {
             suggestions = this.documentation.get_all_modules_documentation();
         }
@@ -97,42 +100,70 @@ export class Autocomplete extends EditorSuggest<TpSuggestDocumentation> {
             return [];
         }
         return suggestions.filter((s) =>
-            s.queryKey.toLowerCase().startsWith(context.query.toLowerCase())
+            s.queryKey.toLowerCase().startsWith(context.query.toLowerCase()),
         );
     }
 
     renderSuggestion(value: TpSuggestDocumentation, el: HTMLElement): void {
+        const isFunctionDocumentation = is_function_documentation(value);
+        const shouldRenderFunctionParameters =
+            isFunctionDocumentation &&
+            value.args &&
+            this.getNumberOfArguments(value.args) > 0 &&
+            shouldRenderParameters(this.intellisense_render_setting);
+        const shouldRenderFunctionReturns =
+            isFunctionDocumentation &&
+            value.returns &&
+            shouldRenderReturns(this.intellisense_render_setting);
+        const shouldRenderFunctionDefinition =
+            isFunctionDocumentation &&
+            this.function_trigger &&
+            value.definition;
+        const shouldRenderFunctionDescription =
+            value.description &&
+            shouldRenderDescription(this.intellisense_render_setting);
+        const hasSecondaryContent =
+            shouldRenderFunctionParameters ||
+            shouldRenderFunctionReturns ||
+            shouldRenderFunctionDefinition ||
+            shouldRenderFunctionDescription;
+
         el.createEl("b", { text: value.name });
-        if (is_function_documentation(value))
-        {
-            if (value.args &&
-                this.getNumberOfArguments(value.args) > 0 &&
-                shouldRenderParameters(this.intellisense_render_setting)
-            ) {
-                el.createEl('p', {text: "Parameter list:"})
+        if (hasSecondaryContent) {
+            el.createEl("br");
+        }
+
+        if (isFunctionDocumentation) {
+            if (shouldRenderFunctionParameters) {
+                el.createEl("p", { text: "Parameter list:" });
                 const list = el.createEl("ol");
                 for (const [key, val] of Object.entries(value.args)) {
-                    append_bolded_label_with_value_to_parent(list, key, val.description)
+                    append_bolded_label_with_value_to_parent(
+                        list,
+                        key,
+                        val.description,
+                    );
                 }
             }
-            if (value.returns &&
-                shouldRenderReturns(this.intellisense_render_setting)
-            ) {
-                append_bolded_label_with_value_to_parent(el, 'Returns', value.returns)
+            if (shouldRenderFunctionReturns) {
+                append_bolded_label_with_value_to_parent(
+                    el,
+                    "Returns",
+                    value.returns,
+                );
             }
         }
-        if (this.function_trigger && is_function_documentation(value)) {
+        if (shouldRenderFunctionDefinition) {
             el.createEl("code", { text: value.definition });
         }
-        if (value.description
-            && shouldRenderDescription(this.intellisense_render_setting)) {
+        if (shouldRenderFunctionDescription) {
             el.createEl("div", { text: value.description });
         }
     }
 
     selectSuggestion(
         value: TpSuggestDocumentation,
-        _evt: MouseEvent | KeyboardEvent
+        _evt: MouseEvent | KeyboardEvent,
     ): void {
         const active_editor = this.app.workspace.activeEditor;
         if (!active_editor || !active_editor.editor) {
@@ -142,7 +173,7 @@ export class Autocomplete extends EditorSuggest<TpSuggestDocumentation> {
         active_editor.editor.replaceRange(
             value.queryKey,
             this.latest_trigger_info.start,
-            this.latest_trigger_info.end
+            this.latest_trigger_info.end,
         );
         if (
             this.latest_trigger_info.start.ch == this.latest_trigger_info.end.ch
@@ -156,9 +187,7 @@ export class Autocomplete extends EditorSuggest<TpSuggestDocumentation> {
         }
     }
 
-    getNumberOfArguments(
-        args: object
-    ): number {
+    getNumberOfArguments(args: object): number {
         try {
             return new Map(Object.entries(args)).size;
         } catch (error) {
@@ -166,7 +195,7 @@ export class Autocomplete extends EditorSuggest<TpSuggestDocumentation> {
         }
     }
 
-    updateAutocompleteIntellisenseSetting(value: IntellisenseRenderOption){
+    updateAutocompleteIntellisenseSetting(value: IntellisenseRenderOption) {
         this.intellisense_render_setting = value;
     }
 }
