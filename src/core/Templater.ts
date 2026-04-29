@@ -533,6 +533,14 @@ export class Templater {
             return;
         }
 
+        // Avoids template replacement in ignored folders
+        for (const ignore_folder of templater.plugin.settings.ignore_folders_on_creation) {
+            const ignore_path = normalizePath(ignore_folder.folder);
+            if (file.path.startsWith(ignore_path) && ignore_path !== "") {
+                return;
+            }
+        }
+
         // TODO: find a better way to do this
         // Currently, I have to wait for the note extractor plugin to add the file content before replacing
         await delay(300);

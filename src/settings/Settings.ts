@@ -17,6 +17,10 @@ export interface FileTemplate {
     template: string;
 }
 
+export interface IgnoreFolderOnCreation {
+    folder: string;
+}
+
 export const DEFAULT_SETTINGS: Settings = {
     command_timeout: 5,
     templates_folder: "",
@@ -36,6 +40,7 @@ export const DEFAULT_SETTINGS: Settings = {
     startup_templates: [""],
     intellisense_render:
         IntellisenseRenderOption.RenderDescriptionParameterReturn,
+    ignore_folders_on_creation: [{ folder: "" }],
 };
 
 export interface Settings {
@@ -56,6 +61,7 @@ export interface Settings {
     enabled_templates_hotkeys: Array<string>;
     startup_templates: Array<string>;
     intellisense_render: number;
+    ignore_folders_on_creation: Array<IgnoreFolderOnCreation>;
 }
 
 export class TemplaterSettingTab extends PluginSettingTab {
@@ -74,6 +80,7 @@ export class TemplaterSettingTab extends PluginSettingTab {
         this.add_auto_jump_to_cursor();
         this.add_trigger_on_new_file_creation_setting();
         if (this.plugin.settings.trigger_on_file_creation) {
+            this.add_ignore_folders_on_creation_setting();
             this.add_folder_templates_setting();
             this.add_file_templates_setting();
         }
@@ -985,6 +992,109 @@ export class TemplaterSettingTab extends PluginSettingTab {
 
             div.appendChild(this.containerEl.lastChild as Node);
         }
+    }
+
+    add_ignore_folders_on_creation_setting(): void {
+        new Setting(this.containerEl)
+            .setName("Ignore folders on file creation")
+            .setHeading();
+
+        const descHeading = document.createDocumentFragment();
+        descHeading.append(
+            "Files created in these folders will NOT trigger Templater's file creation handler.",
+            descHeading.createEl("br"),
+            "This prevents Templater syntax from being stripped in files created in these locations.",
+            descHeading.createEl("br"),
+            "The check includes all subfolders."
+        );
+
+        new Setting(this.containerEl).setDesc(descHeading);
+
+        this.plugin.settings.ignore_folders_on_creation.forEach(
+            (ignore_folder, index) => {
+                const s = new Setting(this.containerEl)
+                    .addSearch((cb) => {
+                        new FolderSuggest(this.app, cb.inputEl);
+                        cb.setPlaceholder("Folder")
+                            .setValue(ignore_folder.folder)
+                            .onChange((new_folder) => {
+                                if (
+                                    new_folder &&
+                                    this.plugin.settings.ignore_folders_on_creation.some(
+                                        (e) => e.folder == new_folder
+                                    )
+                                ) {
+                                    log_error(
+                                        new TemplaterError(
+                                            "This folder is already in the ignore list"
+                                        )
+                                    );
+                                    return;
+                                }
+
+                                this.plugin.settings.ignore_folders_on_creation[
+                                    index
+                                ].folder = new_folder;
+                                this.plugin.save_settings();
+                            });
+                        // @ts-ignore
+                        cb.containerEl.addClass("templater_search");
+                    })
+                    .addExtraButton((cb) => {
+                        cb.setIcon("up-chevron-glyph")
+                            .setTooltip("Move up")
+                            .onClick(() => {
+                                arraymove(
+                                    this.plugin.settings.ignore_folders_on_creation,
+                                    index,
+                                    index - 1
+                                );
+                                this.plugin.save_settings();
+                                this.display();
+                            });
+                    })
+                    .addExtraButton((cb) => {
+                        cb.setIcon("down-chevron-glyph")
+                            .setTooltip("Move down")
+                            .onClick(() => {
+                                arraymove(
+                                    this.plugin.settings.ignore_folders_on_creation,
+                                    index,
+                                    index + 1
+                                );
+                                this.plugin.save_settings();
+                                this.display();
+                            });
+                    })
+                    .addExtraButton((cb) => {
+                        cb.setIcon("cross")
+                            .setTooltip("Delete")
+                            .onClick(() => {
+                                this.plugin.settings.ignore_folders_on_creation.splice(
+                                    index,
+                                    1
+                                );
+                                this.plugin.save_settings();
+                                this.display();
+                            });
+                    });
+                s.infoEl.remove();
+            }
+        );
+
+        new Setting(this.containerEl).addButton((button: ButtonComponent) => {
+            button
+                .setButtonText("Add folder to ignore list")
+                .setTooltip("Add folder to ignore on file creation")
+                .setCta()
+                .onClick(() => {
+                    this.plugin.settings.ignore_folders_on_creation.push({
+                        folder: "",
+                    });
+                    this.plugin.save_settings();
+                    this.display();
+                });
+        });
     }
 
     add_donating_setting(): void {
