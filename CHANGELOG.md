@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.20.0](https://github.com/SilentVoid13/Templater/compare/2.19.3...2.20.0) (2026-04-29)
+
+
+### Features
+
+* add ignore folders on file creation setting ([#1710](https://github.com/SilentVoid13/Templater/issues/1710)) ([0f0058a](https://github.com/SilentVoid13/Templater/commit/0f0058a090dcf2d7bcb9778d68a99058e55df251)), closes [#927](https://github.com/SilentVoid13/Templater/issues/927) [#716](https://github.com/SilentVoid13/Templater/issues/716) [#326](https://github.com/SilentVoid13/Templater/issues/326) [#1465](https://github.com/SilentVoid13/Templater/issues/1465) [#1100](https://github.com/SilentVoid13/Templater/issues/1100)
+
 ### [2.19.3](https://github.com/SilentVoid13/Templater/compare/2.19.2...2.19.3) (2026-04-22)
 
 
