@@ -22,7 +22,8 @@ export class MultiSuggesterModal<T> extends Modal {
         private text_items: string[] | ((item: T) => string),
         private items: T[],
         title: string,
-        limit?: number
+        limit?: number,
+        default_values?: T[]
     ) {
         super(app);
         this.setTitle(title);
@@ -35,10 +36,10 @@ export class MultiSuggesterModal<T> extends Modal {
         this.suggester = new Suggester(
             app,
             inputComponent.inputEl,
-            this.getItemText.bind(this),
+            (item: T) => this.getItemText(item),
             items,
             limit
-        ).onSelect(this.onChooseItem.bind(this));
+        ).onSelect((item: T) => this.onChooseItem(item));
         const buttonContainer = this.contentEl.createDiv(
             "modal-button-container"
         );
@@ -49,10 +50,13 @@ export class MultiSuggesterModal<T> extends Modal {
         new ButtonComponent(buttonContainer)
             .setButtonText("Cancel")
             .onClick(() => this.close());
+        if (default_values) {
+            this.selectedItems = default_values;
+        }
     }
 
     onOpen(): void {
-        this.display();
+        this.processSelectedItems();
     }
 
     display(): void {
@@ -85,6 +89,10 @@ export class MultiSuggesterModal<T> extends Modal {
 
     onChooseItem(item: T): void {
         this.selectedItems.push(item);
+        this.processSelectedItems();
+    }
+
+    private processSelectedItems(): void {
         const filteredItems = this.items.filter((item) => {
             return !this.selectedItems.some(
                 (selected_item) => selected_item === item
@@ -138,7 +146,9 @@ class Suggester<T> extends AbstractInputSuggest<T> {
         limit?: number
     ) {
         super(app, textInputEl);
-        limit && (this.limit = limit);
+        if (limit) {
+            this.limit = limit;
+        }
     }
     protected getSuggestions(query: string): T[] | Promise<T[]> {
         const q = prepareFuzzySearch(query);

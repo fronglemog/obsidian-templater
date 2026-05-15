@@ -18,6 +18,7 @@ export class FuzzySuggester extends FuzzySuggestModal<TFile> {
         super(plugin.app);
         this.plugin = plugin;
         this.setPlaceholder("Type name of a template...");
+        this.containerEl.addClass("templater-fuzzy-suggester-modal");
     }
 
     getItems(): TFile[] {
@@ -28,9 +29,9 @@ export class FuzzySuggester extends FuzzySuggestModal<TFile> {
             () =>
                 get_tfiles_from_folder(
                     this.plugin.app,
-                    this.plugin.settings.templates_folder
+                    this.plugin.settings.templates_folder,
                 ),
-            `Couldn't retrieve template files from templates folder ${this.plugin.settings.templates_folder}`
+            `Couldn't retrieve template files from templates folder ${this.plugin.settings.templates_folder}`,
         );
         if (!files) {
             return [];
@@ -45,11 +46,16 @@ export class FuzzySuggester extends FuzzySuggestModal<TFile> {
             normalizePath(this.plugin.settings.templates_folder) != "/"
         ) {
             // Modify splice position if folder has a trailing slash
-            const folderLength = this.plugin.settings.templates_folder.length
-            const position = this.plugin.settings.templates_folder.endsWith('/') ? folderLength : folderLength + 1
-            relativePath = item.path.slice(
-                position
-            );
+            const folderLength = this.plugin.settings.templates_folder.length;
+            let position: number;
+            if (folderLength === 0) {
+                position = 0;
+            } else if (this.plugin.settings.templates_folder.endsWith("/")) {
+                position = folderLength;
+            } else {
+                position = folderLength + 1;
+            }
+            relativePath = item.path.slice(position);
         }
         return relativePath.split(".").slice(0, -1).join(".");
     }
@@ -57,12 +63,12 @@ export class FuzzySuggester extends FuzzySuggestModal<TFile> {
     onChooseItem(item: TFile): void {
         switch (this.open_mode) {
             case OpenMode.InsertTemplate:
-                this.plugin.templater.append_template_to_active_file(item);
+                void this.plugin.templater.append_template_to_active_file(item);
                 break;
             case OpenMode.CreateNoteTemplate:
-                this.plugin.templater.create_new_note_from_template(
+                void this.plugin.templater.create_new_note_from_template(
                     item,
-                    this.creation_folder
+                    this.creation_folder,
                 );
                 break;
         }
@@ -72,7 +78,7 @@ export class FuzzySuggester extends FuzzySuggestModal<TFile> {
         try {
             this.open();
         } catch (e) {
-            log_error(e);
+            log_error(e instanceof Error ? e : new Error(String(e)));
         }
     }
 

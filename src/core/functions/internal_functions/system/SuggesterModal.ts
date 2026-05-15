@@ -11,15 +11,27 @@ export class SuggesterModal<T> extends FuzzySuggestModal<T> {
         private text_items: string[] | ((item: T) => string),
         private items: T[],
         placeholder: string,
-        limit?: number
+        limit?: number,
+        private default_value?: T
     ) {
         super(app);
+        this.containerEl.addClass("templater-suggester-modal");
         this.setPlaceholder(placeholder);
-        limit && (this.limit = limit);
+        if (limit) {
+            this.limit = limit;
+        }
     }
 
     getItems(): T[] {
         return this.items;
+    }
+
+    onOpen(): void {
+        void super.onOpen();
+        if (this.default_value !== undefined) {
+            this.inputEl.value = this.getItemText(this.default_value);
+            this.inputEl.dispatchEvent(new InputEvent("input"));
+        }
     }
 
     onClose(): void {

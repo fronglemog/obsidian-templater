@@ -4,14 +4,28 @@
         "inlineSourceMap": true,
         "inlineSources": true,
         "module": "ESNext",
-        "target": "ES6",
+        "target": "ES2022",
         "allowJs": true,
         "noImplicitAny": true,
         "moduleResolution": "node",
         "importHelpers": true,
         "isolatedModules": true,
         "strictNullChecks": true,
+        "allowSyntheticDefaultImports": true,
+        "types": [
+            "node",
+            "@wdio/globals/types",
+            "@wdio/mocha-framework",
+            "wdio-obsidian-service"
+        ],
+        "skipLibCheck": true,
         "lib": ["DOM", "ES5", "ES6", "ES7", "ESNext"]
     },
-    "include": ["src/**/*.ts", "tests/**/*.ts", "docs/**/*"]
+    "include": [
+        "src/**/*.ts",
+        "tests/**/*.ts",
+        "test/**/*.ts",
+        "wdio.conf.mts",
+        "docs/**/*"
+    ]
 }

@@ -1,8 +1,6 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/LICENSE
 
-/* eslint-disable */
-
 (function (mod) {
     mod(window.CodeMirror);
 })(function (CodeMirror) {
@@ -108,12 +106,12 @@
                 return state.tokenize(stream, state);
             } else if (
                 ch == "." &&
-                stream.match(/^\d[\d_]*(?:[eE][+\-]?[\d_]+)?/)
+                stream.match(/^\d[\d_]*(?:[eE][+-]?[\d_]+)?/)
             ) {
                 return ret("number", "number");
             } else if (ch == "." && stream.match("..")) {
                 return ret("spread", "meta");
-            } else if (/[\[\]{}\(\),;\:\.]/.test(ch)) {
+            } else if (/[[\]{}(),;:.]/.test(ch)) {
                 return ret(ch);
             } else if (ch == "=" && stream.eat(">")) {
                 return ret("=>", "operator");
@@ -124,7 +122,7 @@
                 return ret("number", "number");
             } else if (/\d/.test(ch)) {
                 stream.match(
-                    /^[\d_]*(?:n|(?:\.[\d_]*)?(?:[eE][+\-]?[\d_]+)?)?/
+                    /^[\d_]*(?:n|(?:\.[\d_]*)?(?:[eE][+-]?[\d_]+)?)?/
                 );
                 return ret("number", "number");
             } else if (ch == "/") {
@@ -173,14 +171,14 @@
                 stream.eatWhile(wordRE);
                 var word = stream.current();
                 if (state.lastType != ".") {
-                    if (keywords.propertyIsEnumerable(word)) {
+                    if (Object.prototype.propertyIsEnumerable.call(keywords, word)) {
                         var kw = keywords[word];
                         return ret(kw.type, kw.style, word);
                     }
                     if (
                         word == "async" &&
                         stream.match(
-                            /^(\s|\/\*([^*]|\*(?!\/))*?\*\/)*[\[\(\w]/,
+                            /^(\s|\/\*([^*]|\*(?!\/))*?\*\/)*[[(\w]/,
                             false
                         )
                     )
@@ -279,7 +277,7 @@
                     ++depth;
                 } else if (wordRE.test(ch)) {
                     sawSomething = true;
-                } else if (/["'\/`]/.test(ch)) {
+                } else if (/["'/`]/.test(ch)) {
                     for (; ; --pos) {
                         if (pos == 0) return;
                         var next = stream.string.charAt(pos - 1);
@@ -326,7 +324,7 @@
             for (var v = state.localVars; v; v = v.next)
                 if (v.name == varname) return true;
             for (var cx = state.context; cx; cx = cx.prev) {
-                for (var v = cx.vars; v; v = v.next)
+                for (v = cx.vars; v; v = v.next)
                     if (v.name == varname) return true;
             }
         }
@@ -337,10 +335,11 @@
             // (Less wasteful than consing up a hundred closures on every call.)
             cx.state = state;
             cx.stream = stream;
-            (cx.marked = null), (cx.cc = cc);
+            cx.marked = null;
+            cx.cc = cc;
             cx.style = style;
 
-            if (!state.lexical.hasOwnProperty("align"))
+            if (!Object.prototype.hasOwnProperty.call(state.lexical, "align"))
                 state.lexical.align = true;
 
             while (true) {
@@ -681,7 +680,7 @@
             }
 
             var maybeop = noComma ? maybeoperatorNoComma : maybeoperatorComma;
-            if (atomicTypes.hasOwnProperty(type)) return cont(maybeop);
+            if (Object.prototype.hasOwnProperty.call(atomicTypes, type)) return cont(maybeop);
             if (type == "function") return cont(functiondef, maybeop);
             if (type == "class" || (isTS && value == "interface")) {
                 cx.marked = "keyword";
@@ -707,7 +706,7 @@
             return cont();
         }
         function maybeexpression(type) {
-            if (type.match(/[;\}\)\],]/)) return pass();
+            if (type.match(/[;})\],]/)) return pass();
             return pass(expression);
         }
 
@@ -949,7 +948,7 @@
             if (type == "=>") return cont(typeexpr);
         }
         function typeprops(type) {
-            if (type.match(/[\}\)\]]/)) return cont();
+            if (type.match(/[})\]]/)) return cont();
             if (type == "," || type == ";") return cont(typeprops);
             return pass(typeprop, typeprops);
         }
@@ -970,7 +969,7 @@
                 );
             } else if (type == "(") {
                 return pass(functiondecl, typeprop);
-            } else if (!type.match(/[;\}\)\],]/)) {
+            } else if (!type.match(/[;})\],]/)) {
                 return cont();
             }
         }
@@ -1314,7 +1313,7 @@
         function expressionAllowed(stream, state, backUp) {
             return (
                 (state.tokenize == tokenBase &&
-                    /^(?:operator|sof|keyword [bcd]|case|new|export|default|spread|[\[{}\(,;:]|=>)$/.test(
+                    /^(?:operator|sof|keyword [bcd]|case|new|export|default|spread|[[{}(,;:]|=>)$/.test(
                         state.lastType
                     )) ||
                 (state.lastType == "quasi" &&
@@ -1354,7 +1353,7 @@
 
             token: function (stream, state) {
                 if (stream.sol()) {
-                    if (!state.lexical.hasOwnProperty("align"))
+                    if (!Object.prototype.hasOwnProperty.call(state.lexical, "align"))
                         state.lexical.align = false;
                     state.indented = stream.indentation();
                     findFatArrow(stream, state);
@@ -1393,7 +1392,7 @@
                         ((top = state.cc[state.cc.length - 1]) &&
                             (top == maybeoperatorComma ||
                                 top == maybeoperatorNoComma) &&
-                            !/^[,\.=+\-*:?[\(]/.test(textAfter)))
+                            !/^[,.=+\-*:?[(]/.test(textAfter)))
                 )
                     lexical = lexical.prev;
                 if (

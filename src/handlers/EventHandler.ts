@@ -20,8 +20,8 @@ export default class EventHandler {
         private settings: Settings,
     ) {}
 
-    setup(): void {
-        this.plugin.app.workspace.onLayoutReady(() => {
+    async setup(): Promise<void> {
+        this.plugin.app.workspace.onLayoutReady(async () => {
             if (this.settings.trigger_on_file_creation) {
                 const open_behavior =
                     this.plugin.app.vault.getConfig("openBehavior");
@@ -37,7 +37,7 @@ export default class EventHandler {
                         );
                         const active_file = get_active_file(this.plugin.app);
                         if (active_file?.path === daily_note_path) {
-                            Templater.on_file_creation(
+                            await Templater.on_file_creation(
                                 this.templater,
                                 this.plugin.app,
                                 active_file,
@@ -48,19 +48,19 @@ export default class EventHandler {
             }
             this.update_trigger_file_on_creation();
         });
-        this.update_syntax_highlighting();
+        await this.update_syntax_highlighting();
     }
 
-    update_syntax_highlighting(): void {
+    async update_syntax_highlighting(): Promise<void> {
         const desktopShouldHighlight =
             this.plugin.editor_handler.desktopShouldHighlight();
         const mobileShouldHighlight =
             this.plugin.editor_handler.mobileShouldHighlight();
 
         if (desktopShouldHighlight || mobileShouldHighlight) {
-            this.plugin.editor_handler.enable_highlighter();
+            await this.plugin.editor_handler.enable_highlighter();
         } else {
-            this.plugin.editor_handler.disable_highlighter();
+            await this.plugin.editor_handler.disable_highlighter();
         }
     }
 

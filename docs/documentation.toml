@@ -43,11 +43,11 @@ description = "This module contains every internal function related to dates."
 [tp.date.functions.now]
 name = "now"
 description = "Retrieves the date."
-definition = "tp.date.now(format: string = \"YYYY-MM-DD\", offset?: number⎮string, reference?: string, reference_format?: string)"
+definition = "tp.date.now(format: string = \"YYYY-MM-DD\", offset?: number | string, reference?: string, reference_format?: string)"
 
 [[tp.date.functions.now.args]]
 name = "format"
-description = """The format for the date. Defaults to `"YYYY-MM-DD"`. Refer to [format reference](https://momentjs.com/docs/#/displaying/format/)."""
+description = """The format for the date. Defaults to `"YYYY-MM-DD"`. Refer to the [Momentjs format reference](https://momentjs.com/docs/#/displaying/format/)."""
 
 [[tp.date.functions.now.args]]
 name = "offset"
@@ -55,11 +55,11 @@ description = "Duration to offset the date from. If a number is provided, durati
 
 [[tp.date.functions.now.args]]
 name = "reference"
-description = "The date referential, e.g. set this to the note's title."
+description = "The date to use instead of today's date, e.g. set this to the note's title."
 
 [[tp.date.functions.now.args]]
 name = "reference_format"
-description = "The format for the reference date. Refer to [format reference](https://momentjs.com/docs/#/displaying/format/)."
+description = "The format for the reference date. Refer to the [Momentjs format reference](https://momentjs.com/docs/#/displaying/format/)."
 
 [[tp.date.functions.now.examples]]
 name = "Date now"
@@ -100,7 +100,7 @@ definition = "tp.date.tomorrow(format: string = \"YYYY-MM-DD\")"
 
 [[tp.date.functions.tomorrow.args]]
 name = "format"
-description = """The format for the date. Defaults to `"YYYY-MM-DD"`. Refer to [format reference](https://momentjs.com/docs/#/displaying/format/)."""
+description = """The format for the date. Defaults to `"YYYY-MM-DD"`. Refer to the [Momentjs format reference](https://momentjs.com/docs/#/displaying/format/)."""
 
 [[tp.date.functions.tomorrow.examples]]
 name = "Date tomorrow"
@@ -117,7 +117,7 @@ definition = "tp.date.yesterday(format: string = \"YYYY-MM-DD\")"
 
 [[tp.date.functions.yesterday.args]]
 name = "format"
-description = """The format for the date. Defaults to `"YYYY-MM-DD"`. Refer to [format reference](https://momentjs.com/docs/#/displaying/format/)."""
+description = """The format for the date. Defaults to `"YYYY-MM-DD"`. Refer to the [Momentjs format reference](https://momentjs.com/docs/#/displaying/format/)."""
 
 [[tp.date.functions.yesterday.examples]]
 name = "Date yesterday"
@@ -134,7 +134,7 @@ definition = "tp.date.weekday(format: string = \"YYYY-MM-DD\", weekday: number, 
 
 [[tp.date.functions.weekday.args]]
 name = "format"
-description = """The format for the date. Defaults to `"YYYY-MM-DD"`. Refer to [format reference](https://momentjs.com/docs/#/displaying/format/)."""
+description = """The format for the date. Defaults to `"YYYY-MM-DD"`. Refer to the [Momentjs format reference](https://momentjs.com/docs/#/displaying/format/)."""
 
 [[tp.date.functions.weekday.args]]
 name = "weekday"
@@ -142,11 +142,11 @@ description = "Week day number. If the locale assigns Monday as the first day of
 
 [[tp.date.functions.weekday.args]]
 name = "reference"
-description = "The date referential, e.g. set this to the note's title."
+description = "The reference date to use instead of today, e.g. set this to the note's title."
 
 [[tp.date.functions.weekday.args]]
 name = "reference_format"
-description = "The format for the reference date. Refer to [format reference](https://momentjs.com/docs/#/displaying/format/)."
+description = "The format for the reference date. Refer to the [Momentjs format reference](https://momentjs.com/docs/#/displaying/format/)."
 
 [[tp.date.functions.weekday.examples]]
 name = "This week's Monday"
@@ -193,7 +193,7 @@ example = "<% tp.file.content %>"
 [tp.file.functions.create_new]
 name = "create_new"
 description = "Creates a new file using a specified template or with a specified content."
-definition = "tp.file.create_new(template: TFile ⎮ string, filename?: string, open_new: boolean = false, folder?: TFolder | string)"
+definition = "tp.file.create_new(template: TFile | string, filename: string = 'Untitled', open_new: boolean = false, folder?: TFolder | string)"
 
 [[tp.file.functions.create_new.args]]
 name = "template"
@@ -241,7 +241,7 @@ example = """[[<% (await tp.file.create_new("MyFileContent", "MyFilename")).base
 
 [tp.file.functions.creation_date]
 name = "creation_date"
-description = "Retrieves the file's creation date."
+description = "Retrieves the current file's creation date."
 definition = "tp.file.creation_date(format: string = \"YYYY-MM-DD HH:mm\")"
 
 [[tp.file.functions.creation_date.args]]
@@ -343,7 +343,7 @@ example = "<% tp.file.folder(true) %>"
 [tp.file.functions.include]
 name = "include"
 description = "Includes the file's link content. Templates in the included content will be resolved."
-definition = "tp.file.include(include_link: string ⎮ TFile)"
+definition = "tp.file.include(include_link: string | TFile)"
 
 [[tp.file.functions.include.args]]
 name = "include_link"
@@ -555,7 +555,7 @@ selected value: <% value %>"""
 [tp.system.functions.suggester]
 name = "suggester"
 description = "Spawns a suggester prompt and returns the user's chosen item."
-definition = "tp.system.suggester(text_items: string[] ⎮ ((item: T) => string), items: T[], throw_on_cancel: boolean = false, placeholder: string = \"\", limit?: number = undefined)"
+definition = "tp.system.suggester(text_items: string[] | ((item: T) => string), items: T[], throw_on_cancel: boolean = false, placeholder: string = \"\", limit?: number = undefined, default_value?: T = undefined)"
 
 [[tp.system.functions.suggester.args]]
 name = "text_items"
@@ -576,6 +576,10 @@ description = "Placeholder string of the prompt."
 [[tp.system.functions.suggester.args]]
 name = "limit"
 description = "Limit the number of items rendered at once (useful to improve performance when displaying large lists)."
+
+[[tp.system.functions.suggester.args]]
+name = "default_value"
+description = "Default value to initialize the suggester with."
 
 [[tp.system.functions.suggester.examples]]
 name = "Suggester"
@@ -601,10 +605,18 @@ let selectedValue = await tp.system.suggester(["Happy", "Sad", "Confused"], ["Ha
 # <% selectedValue %>
 selected value: <% selectedValue %>"""
 
+[[tp.system.functions.suggester.examples]]
+name = "Default value for the suggester"
+example = """<%*
+let selectedValue = await tp.system.suggester(["Happy", "Sad", "Confused"], ["Happy", "Sad", "Confused"], false, "", undefined, "Confused");
+%>
+# <% selectedValue %>
+selected value: <% selectedValue %>"""
+
 [tp.system.functions.multi_suggester]
 name = "multi_suggester"
 description = "Spawns a suggester prompt that supports selecting multiple items and returns the user's chosen items."
-definition = "tp.system.multi_suggester(text_items: string[] ⎮ ((item: T) => string), items: T[], throw_on_cancel: boolean = false, title: string = \"\", limit?: number = undefined)"
+definition = "tp.system.multi_suggester(text_items: string[] | ((item: T) => string), items: T[], throw_on_cancel: boolean = false, title: string = \"\", limit?: number = undefined, default_values?: T[] = undefined)"
 
 [[tp.system.functions.multi_suggester.args]]
 name = "text_items"
@@ -625,6 +637,10 @@ description = "Text placed at the top of the modal."
 [[tp.system.functions.multi_suggester.args]]
 name = "limit"
 description = "Limit the number of items rendered at once (useful to improve performance when displaying large lists)."
+
+[[tp.system.functions.multi_suggester.args]]
+name = "default_values"
+description = "Default values to initialize the suggester with."
 
 [[tp.system.functions.multi_suggester.examples]]
 name = "Multi-suggester"
@@ -649,6 +665,14 @@ let selectedValues = await tp.system.multi_suggester(["Happy", "Sad", "Confused"
 %>
 # <% selectedValues %>
 selected values: <% selectedValues %>"""
+
+[[tp.system.functions.multi_suggester.examples]]
+name = "Default value for the suggester"
+example = """<%*
+let selectedValue = await tp.system.multi_suggester(["Happy", "Sad", "Confused"], ["Happy", "Sad", "Confused"], false, "", undefined, ["Happy", "Confused"]);
+%>
+# <% selectedValue %>
+selected value: <% selectedValue %>"""
 
 [tp.web]
 name = "web"
