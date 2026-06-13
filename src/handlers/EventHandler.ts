@@ -67,25 +67,4 @@ export default class EventHandler {
             await this.plugin.editor_handler.disable_highlighter();
         }
     }
-
-    update_file_menu(): void {
-        this.plugin.registerEvent(
-            this.plugin.app.workspace.on(
-                "file-menu",
-                (menu: Menu, file: TFile) => {
-                    if (file instanceof TFolder) {
-                        menu.addItem((item: MenuItem) => {
-                            item.setTitle("Create new note from template")
-                                .setIcon("templater-icon")
-                                .onClick(() => {
-                                    this.plugin.fuzzy_suggester.create_new_note_from_template(
-                                        file,
-                                    );
-                                });
-                        });
-                    }
-                },
-            ),
-        );
-    }
 }
