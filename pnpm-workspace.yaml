@@ -1,5 +1,10 @@
 packages:
-    - "."
-
+  - "."
+allowBuilds:
+  "@codemirror/language": true
+  classic-level: true
+  edgedriver: true
+  esbuild: true
+  geckodriver: true
 onlyBuiltDependencies:
-    - "@codemirror/language"
+  - "@codemirror/language"
