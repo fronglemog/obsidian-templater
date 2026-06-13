@@ -55,6 +55,19 @@ class ActiveMarkdownView {
         );
     }
 
+    async setCursorToEnd(): Promise<void> {
+        await browser.executeObsidian(({ app }) => {
+            const editor = app.workspace.activeEditor?.editor;
+            if (!editor) throw new Error("No active editor");
+            const lastLine = editor.lastLine();
+            const lastCh = editor.getLine(lastLine).length;
+            editor.setSelection(
+                { line: lastLine, ch: lastCh },
+                { line: lastLine, ch: lastCh },
+            );
+        });
+    }
+
     async setSelections(ranges: EditorSelection[]): Promise<void> {
         await browser.executeObsidian(({ app }, payload: EditorSelection[]) => {
             const editor = app.workspace.activeEditor?.editor;
@@ -86,6 +99,27 @@ class ActiveMarkdownView {
             expect(cursors).toEqual(expected);
             return true;
         });
+    }
+
+    async typeText(text: string): Promise<void> {
+        await this.focusEditor();
+        await browser.keys(text.split(""));
+    }
+
+    async expectEditorFocused() {
+        await browser.waitUntil(() =>
+            browser.execute(() =>
+                activeDocument.activeElement?.classList.contains("cm-content") ?? false,
+            ),
+        );
+    }
+
+    async expectInlineTitleFocused() {
+        await browser.waitUntil(() =>
+            browser.execute(() =>
+                activeDocument.activeElement?.classList.contains("inline-title") ?? false,
+            ),
+        );
     }
 
     async expectPropertiesToBeVisible() {

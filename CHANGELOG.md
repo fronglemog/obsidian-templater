@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.22.1](https://github.com/SilentVoid13/Templater/compare/2.22.0...2.22.1) (2026-06-06)
+
+
+### Bug Fixes
+
+* Auto jump to note content setting should work with folder templates ([1fad28f](https://github.com/SilentVoid13/Templater/commit/1fad28f90f09b082a1ee50dbe6f8c65ad746eb68)), closes [#1677](https://github.com/SilentVoid13/Templater/issues/1677) [#397](https://github.com/SilentVoid13/Templater/issues/397) [#928](https://github.com/SilentVoid13/Templater/issues/928) [#1176](https://github.com/SilentVoid13/Templater/issues/1176) [#1063](https://github.com/SilentVoid13/Templater/issues/1063) [#781](https://github.com/SilentVoid13/Templater/issues/781) [#673](https://github.com/SilentVoid13/Templater/issues/673)
+
+## [2.22.0](https://github.com/SilentVoid13/Templater/compare/2.21.0...2.22.0) (2026-06-06)
+
+
+### Features
+
+* Add toggle to auto jump to note content after creating note instead of renaming ([4fa41be](https://github.com/SilentVoid13/Templater/commit/4fa41bebc44daa132c148bbd67a6eddbd7c62d93)), closes [#1677](https://github.com/SilentVoid13/Templater/issues/1677) [#397](https://github.com/SilentVoid13/Templater/issues/397) [#928](https://github.com/SilentVoid13/Templater/issues/928) [#1176](https://github.com/SilentVoid13/Templater/issues/1176) [#1063](https://github.com/SilentVoid13/Templater/issues/1063) [#781](https://github.com/SilentVoid13/Templater/issues/781) [#673](https://github.com/SilentVoid13/Templater/issues/673)
+
+## [2.21.0](https://github.com/SilentVoid13/Templater/compare/2.20.5...2.21.0) (2026-06-02)
+
+
+### Features
+
+* Adopt settings definitions. Update dangerous settings to be per vault to reduce social engineering attack surface This applies to the following settings: "Trigger Templater on new file creation", "Enable startup templates", and "Enable user system function commands" ([957a175](https://github.com/SilentVoid13/Templater/commit/957a17541a3bc87eac0fe6e4729ccbeaef42f199))
+
+### [2.20.5](https://github.com/SilentVoid13/Templater/compare/2.20.4...2.20.5) (2026-05-20)
+
+
+### Bug Fixes
+
+* Editor autocompletion for tp.user throwing errors when user scripts are correctly configured ([5baf663](https://github.com/SilentVoid13/Templater/commit/5baf6631dbe5125d54f2c171cc2245e237a90bcc)), closes [#1733](https://github.com/SilentVoid13/Templater/issues/1733)
+* YAML parsing error when inserting template with invalid YAML ([75b6f3d](https://github.com/SilentVoid13/Templater/commit/75b6f3dbe9e49e5378c11e9451656198e409516f)), closes [#1708](https://github.com/SilentVoid13/Templater/issues/1708)
+
 ### [2.20.4](https://github.com/SilentVoid13/Templater/compare/2.20.3...2.20.4) (2026-05-12)
 
 

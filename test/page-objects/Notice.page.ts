@@ -27,6 +27,12 @@ class Notice {
             "Templater error:\n" + "Reached inclusion depth limit (max = 10)",
         );
     }
+    async expectUserScriptsFolderNotFoundErrorNotice(folderName: string) {
+        await this.expectNoticeElWithText(
+            `Templater error:\nFolder "${folderName}" doesn't exist`,
+        );
+    }
+
     async expectFileNameCannotIncludeCharsErrorNotice() {
         await this.expectNoticeElWithText(
             "Templater error:\n" +
@@ -36,6 +42,24 @@ class Notice {
 
     async expectCancelledPromptErrorNotice() {
         await this.expectNoticeElWithText("Templater error:\nCancelled prompt");
+    }
+
+    async expectMigrationNotice(affectedSettings: string[]) {
+        await this.expectNoticeElWithText(
+            "Templater: The following settings were reset because they " +
+                "are now device-local: " +
+                affectedSettings.join(", ") +
+                ". Re-enable them in Templater settings if you trust this vault.",
+        );
+    }
+
+    async expectNoErrorNotice() {
+        // eslint-disable-next-line wdio/no-pause
+        await browser.pause(500);
+        const isDisplayed = await this.#noticeEl
+            .isDisplayed()
+            .catch(() => false);
+        expect(isDisplayed).toBe(false);
     }
 
     async dismissAll() {

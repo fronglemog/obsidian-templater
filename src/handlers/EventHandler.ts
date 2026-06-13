@@ -1,8 +1,6 @@
 import TemplaterPlugin from "main";
 import { Templater } from "core/Templater";
-import { Settings } from "settings/Settings";
 import {
-    EventRef,
     Menu,
     MenuItem,
     moment,
@@ -10,19 +8,17 @@ import {
     TAbstractFile,
 } from "obsidian";
 import { get_active_file } from "utils/Utils";
+import { getLocalSettings } from "settings/LocalSettings";
 
 export default class EventHandler {
-    private trigger_on_file_creation_event: EventRef | undefined;
-
     constructor(
         private plugin: TemplaterPlugin,
         private templater: Templater,
-        private settings: Settings,
     ) {}
 
     async setup(): Promise<void> {
         this.plugin.app.workspace.onLayoutReady(async () => {
-            if (this.settings.trigger_on_file_creation) {
+            if (getLocalSettings(this.plugin.app).trigger_on_file_creation) {
                 const open_behavior =
                     this.plugin.app.vault.getConfig("openBehavior");
                 if (open_behavior === "daily") {
@@ -46,7 +42,15 @@ export default class EventHandler {
                     }
                 }
             }
-            this.update_trigger_file_on_creation();
+            this.plugin.registerEvent(
+                this.plugin.app.vault.on("create", (file: TAbstractFile) =>
+                    Templater.on_file_creation(
+                        this.templater,
+                        this.plugin.app,
+                        file,
+                    ),
+                ),
+            );
         });
         await this.update_syntax_highlighting();
     }
@@ -64,25 +68,24 @@ export default class EventHandler {
         }
     }
 
-    update_trigger_file_on_creation(): void {
-        if (this.settings.trigger_on_file_creation) {
-            this.trigger_on_file_creation_event = this.plugin.app.vault.on(
-                "create",
-                (file: TAbstractFile) =>
-                    Templater.on_file_creation(
-                        this.templater,
-                        this.plugin.app,
-                        file,
-                    ),
-            );
-            this.plugin.registerEvent(this.trigger_on_file_creation_event);
-        } else {
-            if (this.trigger_on_file_creation_event) {
-                this.plugin.app.vault.offref(
-                    this.trigger_on_file_creation_event,
-                );
-                this.trigger_on_file_creation_event = undefined;
-            }
-        }
+    update_file_menu(): void {
+        this.plugin.registerEvent(
+            this.plugin.app.workspace.on(
+                "file-menu",
+                (menu: Menu, file: TFile) => {
+                    if (file instanceof TFolder) {
+                        menu.addItem((item: MenuItem) => {
+                            item.setTitle("Create new note from template")
+                                .setIcon("templater-icon")
+                                .onClick(() => {
+                                    this.plugin.fuzzy_suggester.create_new_note_from_template(
+                                        file,
+                                    );
+                                });
+                        });
+                    }
+                },
+            ),
+        );
     }
 }
