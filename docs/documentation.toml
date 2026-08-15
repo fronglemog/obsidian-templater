@@ -270,6 +270,7 @@ name = "order"
 description = """
 The order of the different cursors jump, e.g. it will jump from 1 to 2 to 3, and so on.
 If you specify multiple tp.file.cursor with the same order, the editor will switch to multi-cursor.
+The order can be any number, including a decimal one, so you can insert a new jump between two existing ones without renumbering them, e.g. 1.5 jumps after 1 and before 2.
 """
 
 [[tp.file.functions.cursor.examples]]
@@ -279,6 +280,10 @@ example = "<% tp.file.cursor() %>"
 [[tp.file.functions.cursor.examples]]
 name = "File multi-cursor"
 example = "<% tp.file.cursor(1) %>Content<% tp.file.cursor(1) %>"
+
+[[tp.file.functions.cursor.examples]]
+name = "File cursor with a decimal order"
+example = "<% tp.file.cursor(1) %>Content<% tp.file.cursor(1.5) %>Content<% tp.file.cursor(2) %>"
 
 [tp.file.functions.cursor_append]
 name = "cursor_append"
@@ -514,7 +519,7 @@ example = "<% tp.system.clipboard() %>"
 [tp.system.functions.prompt]
 name = "prompt"
 description = "Spawns a prompt modal and returns the user's input."
-definition = "tp.system.prompt(prompt_text?: string, default_value?: string, throw_on_cancel: boolean = false, multiline?: boolean = false)"
+definition = "tp.system.prompt(prompt_text?: string, default_value?: string, throw_on_cancel: boolean = false, multiline?: boolean = false, select_default_value?: boolean = false)"
 
 [[tp.system.functions.prompt.args]]
 name = "prompt_text"
@@ -532,6 +537,10 @@ description = "Throws an error if the prompt is canceled, instead of returning a
 name = "multiline"
 description = "If set to `true`, the input field will be a multiline textarea. Defaults to `false`."
 
+[[tp.system.functions.prompt.args]]
+name = "select_default_value"
+description = "If set to `true`, the default value shown when the modal opens is selected, so typing replaces it. Defaults to `false`."
+
 [[tp.system.functions.prompt.examples]]
 name = "Prompt"
 example = """<% await tp.system.prompt("Please enter a value") %>"""
@@ -543,6 +552,10 @@ example = """<% await tp.system.prompt("What is your mood today?", "happy") %>""
 [[tp.system.functions.prompt.examples]]
 name = "Multiline prompt"
 example = """<% await tp.system.prompt("What is your mood today?", null, false, true) %>"""
+
+[[tp.system.functions.prompt.examples]]
+name = "Prompt with pre-selected default value"
+example = """<% await tp.system.prompt("What is your mood today?", "Input a mood...", false, false, true) %>"""
 
 [[tp.system.functions.prompt.examples]]
 name = "Reuse output from prompt"
@@ -680,12 +693,20 @@ description = "This modules contains every internal function related to the web 
 
 [tp.web.functions.daily_quote]
 name = "daily_quote"
-description = "Retrieves and parses the daily quote from `https://github.com/Zachatoo/quotes-database` as a callout."
-definition = "tp.web.daily_quote()"
+description = "Retrieves and parses a daily quote as a callout. Without arguments it uses the language configured in Obsidian (via `getLanguage()`), falling back to English. English quotes come from `https://github.com/Zachatoo/quotes-database` and Spanish quotes from `https://github.com/wulflo/frases-inventario`."
+definition = "tp.web.daily_quote(language?: string)"
+
+[[tp.web.functions.daily_quote.args]]
+name = "language"
+description = "Optional language code (e.g. `\"en\"`, `\"es\"`) selecting the quotes database. Defaults to Obsidian's display language, falling back to English when no database is registered for that language."
 
 [[tp.web.functions.daily_quote.examples]]
 name = "Daily quote"
 example = "<% await tp.web.daily_quote() %>"
+
+[[tp.web.functions.daily_quote.examples]]
+name = "Daily quote in Spanish"
+example = """<% await tp.web.daily_quote("es") %>"""
 
 [tp.web.functions.random_picture]
 name = "random_picture"

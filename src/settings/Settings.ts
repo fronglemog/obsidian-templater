@@ -13,6 +13,7 @@ import { FolderTemplateModal } from "./modals/FolderTemplateModal";
 import { IgnoreFolderModal } from "./modals/IgnoreFolderModal";
 import { StartupTemplateModal } from "./modals/StartupTemplateModal";
 import { SystemCommandModal } from "./modals/SystemCommandModal";
+import { TemplateHotkeyModal } from "./modals/TemplateHotkeyModal";
 import { IntellisenseRenderOption } from "./RenderSettings/IntellisenseRenderOption";
 import {
     DEFAULT_LOCAL_SETTINGS,
@@ -22,7 +23,13 @@ import {
 } from "./LocalSettings";
 import { set } from "utils/set";
 import { get, type Paths } from "utils/get";
-import { TemplateHotkeysPage } from "./TemplateHotkeysPage";
+import {
+    describe_template_hotkey_commands,
+    resolve_template_hotkey,
+    serialize_template_hotkey,
+    type ResolvedTemplateHotkey,
+    type TemplateHotkeyEntry,
+} from "./TemplateHotkeys";
 import { UserScriptsPage } from "./UserScriptsPage";
 
 export interface FolderTemplate {
@@ -75,7 +82,7 @@ export interface Settings {
     templates_pairs: Array<[string, string]>;
     shell_path: string;
     user_scripts_folder: string;
-    enabled_templates_hotkeys: Array<string>;
+    enabled_templates_hotkeys: Array<TemplateHotkeyEntry>;
     startup_templates: Array<string>;
     intellisense_render: IntellisenseRenderOption;
 }
@@ -224,7 +231,6 @@ export class TemplaterSettingTab extends PluginSettingTab {
                             "Check the ",
                             internalFunctionsDesc.createEl("a", {
                                 href: "https://silentvoid13.github.io/Templater/",
-                                // eslint-disable-next-line obsidianmd/ui/sentence-case -- Inline link text within a sentence, not a standalone UI label
                                 text: "documentation",
                             }),
                             " to get a list of all the available internal variables / functions.",
@@ -249,20 +255,26 @@ export class TemplaterSettingTab extends PluginSettingTab {
                             "Bind templates to ",
                             templateHotkeysDesc.createEl("a", {
                                 href: "https://obsidian.md/help/plugins/command-palette",
-                                // eslint-disable-next-line obsidianmd/ui/sentence-case -- Inline link text within a sentence, not a standalone UI label
                                 text: "commands",
                             }),
                             ". Bind commands to ",
                             templateHotkeysDesc.createEl("a", {
                                 href: "https://obsidian.md/help/hotkeys",
-                                // eslint-disable-next-line obsidianmd/ui/sentence-case
                                 text: "hotkeys",
                             }),
                             ' in "Hotkeys" settings.',
                         );
                         return templateHotkeysDesc;
                     })(),
-                    page: () => new TemplateHotkeysPage(this, this.plugin),
+                    items: [
+                        {
+                            name: "No template folder set. Please set the template folder location on the previous page.",
+                            searchable: false,
+                            visible: () =>
+                                !this.plugin.settings.templates_folder,
+                        },
+                        this.templateHotkeysGroup(),
+                    ],
                 },
                 {
                     name: "Automatic jump to cursor",
@@ -271,14 +283,12 @@ export class TemplaterSettingTab extends PluginSettingTab {
                         autoJumpDesc.append(
                             "Automatically triggers ",
                             autoJumpDesc.createEl("code", {
-                                // eslint-disable-next-line obsidianmd/ui/sentence-case -- Inline code identifier, not a UI label
                                 text: "tp.file.cursor",
                             }),
                             " after inserting a template.",
                             autoJumpDesc.createEl("br"),
                             "You can also set a hotkey to manually trigger ",
                             autoJumpDesc.createEl("code", {
-                                // eslint-disable-next-line obsidianmd/ui/sentence-case -- Inline code identifier, not a UI label
                                 text: "tp.file.cursor",
                             }),
                             ".",
@@ -338,7 +348,7 @@ export class TemplaterSettingTab extends PluginSettingTab {
                             "Enables templates to run automatically when Templater starts.",
                             createEl("br"),
                             createEl("br"),
-                            createEl("span", {
+                            createSpan({
                                 text: "This setting is stored on this device only and must be enabled separately on each device.",
                                 cls: "mod-warning",
                             }),
@@ -383,7 +393,7 @@ export class TemplaterSettingTab extends PluginSettingTab {
             "This makes Templater compatible with other plugins like the Daily note core plugin, Calendar plugin, Review plugin, Note refactor plugin, etc. ",
             createEl("br"),
             createEl("br"),
-            createEl("span", {
+            createSpan({
                 text: "This setting is stored on this device only and must be enabled separately on each device.",
                 cls: "mod-warning",
             }),
@@ -484,6 +494,87 @@ export class TemplaterSettingTab extends PluginSettingTab {
                         "regex",
             },
         ];
+    }
+
+    private templateHotkeysGroup(): SettingDefinitionList<keyof Settings> {
+        const openModal = (
+            initialValues: ResolvedTemplateHotkey,
+            onSubmit: (hotkey: ResolvedTemplateHotkey) => Promise<void> | void,
+            excludeIndex?: number,
+        ) => {
+            new TemplateHotkeyModal(
+                this.app,
+                this.plugin,
+                initialValues,
+                onSubmit,
+                (template) => {
+                    if (
+                        this.plugin.settings.enabled_templates_hotkeys.some(
+                            (entry, i) =>
+                                resolve_template_hotkey(entry).template ===
+                                    template && i !== excludeIndex,
+                        )
+                    ) {
+                        return "This template already has a hotkey";
+                    }
+                },
+            ).open();
+        };
+
+        return {
+            type: "list",
+            addItem: {
+                name: "Add template hotkey",
+                action: () => {
+                    openModal(
+                        {
+                            template: "",
+                            insert_enabled: true,
+                            create_enabled: true,
+                        },
+                        async (hotkey) => {
+                            this.plugin.settings.enabled_templates_hotkeys.push(
+                                serialize_template_hotkey(hotkey),
+                            );
+                            this.plugin.command_handler.sync_template_hotkeys();
+                            this.update();
+                            await this.plugin.save_settings();
+                        },
+                    );
+                },
+            },
+            onDelete: (index) => {
+                this.plugin.settings.enabled_templates_hotkeys.splice(index, 1);
+                this.plugin.command_handler.sync_template_hotkeys();
+                this.update();
+                void this.plugin.save_settings();
+            },
+            emptyState: "No template hotkeys added.",
+            items: this.plugin.settings.enabled_templates_hotkeys.map(
+                (entry, index) => {
+                    const hotkey = resolve_template_hotkey(entry);
+                    return {
+                        name: hotkey.template,
+                        desc: describe_template_hotkey_commands(hotkey),
+                        searchable: false,
+                        action: () => {
+                            openModal(
+                                hotkey,
+                                async (updated) => {
+                                    this.plugin.settings.enabled_templates_hotkeys[
+                                        index
+                                    ] = serialize_template_hotkey(updated);
+                                    this.plugin.command_handler.sync_template_hotkeys();
+                                    this.update();
+                                    await this.plugin.save_settings();
+                                },
+                                index,
+                            );
+                        },
+                    };
+                },
+            ),
+        };
     }
 
     private ignoreFoldersGroup(): SettingDefinitionList<keyof Settings> {
@@ -725,7 +816,6 @@ export class TemplaterSettingTab extends PluginSettingTab {
                     "Check the ",
                     desc.createEl("a", {
                         href: "https://silentvoid13.github.io/Templater/",
-                        // eslint-disable-next-line obsidianmd/ui/sentence-case -- Inline link text within a sentence, not a standalone UI label
                         text: "documentation",
                     }),
                     " for more information.",
@@ -786,7 +876,7 @@ export class TemplaterSettingTab extends PluginSettingTab {
                         "Allows you to create user functions linked to system commands.",
                         createEl("br"),
                         createEl("br"),
-                        createEl("span", {
+                        createSpan({
                             text: "This setting is stored on this device only and must be enabled separately on each device.",
                             cls: "mod-warning",
                         }),

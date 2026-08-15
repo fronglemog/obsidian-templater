@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.25.0](https://github.com/SilentVoid13/Templater/compare/2.24.3...2.25.0) (2026-08-05)
+
+
+### Features
+
+* **cursor:** support decimal and negative orders for cursor jumps ([ee79eee](https://github.com/SilentVoid13/Templater/commit/ee79eeee56d9eedb1e5c0ee834e9ab93544e64d3)), closes [#1734](https://github.com/SilentVoid13/Templater/issues/1734)
+* **template-hotkeys:** implement template hotkey management with insert and create commands ([f68b64b](https://github.com/SilentVoid13/Templater/commit/f68b64bebeb989ccb533494eb5e2d00077e6a463)), closes [#1750](https://github.com/SilentVoid13/Templater/issues/1750)
+
+### [2.24.3](https://github.com/SilentVoid13/Templater/compare/2.24.2...2.24.3) (2026-07-24)
+
+### [2.24.2](https://github.com/SilentVoid13/Templater/compare/2.24.1...2.24.2) (2026-07-24)
+
+### [2.24.1](https://github.com/SilentVoid13/Templater/compare/2.24.0...2.24.1) (2026-07-24)
+
+## [2.24.0](https://github.com/SilentVoid13/Templater/compare/2.23.1...2.24.0) (2026-07-19)
+
+
+### Features
+
+* add language parameter to tp.web.daily_quote() ([#1759](https://github.com/SilentVoid13/Templater/issues/1759)) ([bde536f](https://github.com/SilentVoid13/Templater/commit/bde536f079d041a914601cd6a860372d60d9c8af)), closes [#1757](https://github.com/SilentVoid13/Templater/issues/1757)
+* **prompt:** Added ability to auto select default text ([#1761](https://github.com/SilentVoid13/Templater/issues/1761)) ([94ca056](https://github.com/SilentVoid13/Templater/commit/94ca05642cad3cf603fa2a9d9b8e057749b5128e))
+
+### [2.23.1](https://github.com/SilentVoid13/Templater/compare/2.23.0...2.23.1) (2026-07-03)
+
+
+### Bug Fixes
+
+* Prevent code execution in user scripts autocompletion ([9a08060](https://github.com/SilentVoid13/Templater/commit/9a0806047af3a7288a8b2acb4869e37f0af6ea29))
+
+## [2.23.0](https://github.com/SilentVoid13/Templater/compare/2.22.1...2.23.0) (2026-06-23)
+
+
+### Features
+
+* add autocomplete for object-exported user script functions ([#1753](https://github.com/SilentVoid13/Templater/issues/1753)) fixes [#1752](https://github.com/SilentVoid13/Templater/issues/1752) ([9106cb3](https://github.com/SilentVoid13/Templater/commit/9106cb30e43f3db85a0ea7dc9ca91f165cb36126))
+
+
+### Bug Fixes
+
+* Don't show checkbox when confirming dangerous settings on mobile, instead update button text ([70a24ce](https://github.com/SilentVoid13/Templater/commit/70a24cefece47be55018b989b255b224a9b3b718))
+
 ### [2.22.1](https://github.com/SilentVoid13/Templater/compare/2.22.0...2.22.1) (2026-06-06)
 
 
@@ -22,6 +63,13 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 * Adopt settings definitions. Update dangerous settings to be per vault to reduce social engineering attack surface This applies to the following settings: "Trigger Templater on new file creation", "Enable startup templates", and "Enable user system function commands" ([957a175](https://github.com/SilentVoid13/Templater/commit/957a17541a3bc87eac0fe6e4729ccbeaef42f199))
+
+## [2.20.6](https://github.com/SilentVoid13/Templater/compare/2.20.5...2.20.6) (2026-06-23)
+
+
+### Features
+
+* add autocomplete for object-exported user script functions ([#1753](https://github.com/SilentVoid13/Templater/issues/1753)) fixes [#1752](https://github.com/SilentVoid13/Templater/issues/1752) ([33fc478](https://github.com/SilentVoid13/Templater/commit/33fc478d0296949e539f7943f5a88100cc78ff94))
 
 ### [2.20.5](https://github.com/SilentVoid13/Templater/compare/2.20.4...2.20.5) (2026-05-20)
 

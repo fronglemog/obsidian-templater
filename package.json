@@ -1,6 +1,6 @@
 {
     "name": "templater-obsidian",
-    "version": "2.22.1",
+    "version": "2.25.0",
     "description": "Create and use templates",
     "main": "main.js",
     "scripts": {
@@ -42,7 +42,7 @@
         "esbuild": "^0.13.15",
         "esbuild-plugin-toml": "^0.0.1",
         "eslint": "^9.35.0",
-        "eslint-plugin-obsidianmd": "latest",
+        "eslint-plugin-obsidianmd": "0.4.1",
         "eslint-plugin-wdio": "^9.16.2",
         "globals": "^16.3.0",
         "mocha": "^11.7.5",
@@ -52,6 +52,7 @@
         "stringify-package": "^1.0.1",
         "ts-node": "^9.1.1",
         "tslib": "^2.4.1",
+        "typescript": "^4.8.4",
         "typescript-eslint": "^8.42.0",
         "wdio-obsidian-reporter": "^2.1.6",
         "wdio-obsidian-service": "^2.1.6",
@@ -63,8 +64,8 @@
         "@codemirror/view": "6.38.6",
         "@microsoft/tsdoc": "^0.15.1",
         "@silentvoid13/rusty_engine": "^0.4.0",
-        "child_process": "^1.0.2",
-        "typescript": "^4.8.4"
+        "acorn": "^8.17.0",
+        "child_process": "^1.0.2"
     },
     "config": {
         "commitizen": {
